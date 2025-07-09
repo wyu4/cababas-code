@@ -77,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
             </style>
 
             <body>
-                <section id="info">
+                <section id="info" hidden>
                     <p id="x-label"></p>
                     <p id="y-label"></p>
                     <p id="width-label"></p>

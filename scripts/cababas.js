@@ -72,6 +72,7 @@ function jump() {
     requestAnimationFrame(update);
 }
 
+cababas.addEventListener("click", jump);
 jumpButton.addEventListener("click", jump);
 
 window.addEventListener("load", () => {

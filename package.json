@@ -14,8 +14,14 @@
   "contributes": {
     "commands": [
       {
-        "command": "cababas-buddy.helloWorld",
-        "title": "Hello World"
+        "command": "cababas-buddy.love",
+        "title": "Love",
+        "category": "Cameluo Cababas"
+      },
+      {
+        "command": "cababas-buddy.spawn",
+        "title": "Spawn",
+        "category": "Cameluo Cababas"
       }
     ]
   },

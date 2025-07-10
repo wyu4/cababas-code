@@ -3,3 +3,5 @@ out
 temp.html
 .env
 .vscode-test
+dist
+*.vsix

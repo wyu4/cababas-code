@@ -49,7 +49,7 @@ function calculateDisplacement(
 }
 
 function setX(x) {
-    const clamped = Math.min(Math.max(0, x), body.offsetWidth);
+    const clamped = Math.min(Math.max(0, x), body.offsetWidth - cababas.offsetWidth);
     cababasX = clamped;
     cababas.style.left = clamped + "px";
 }
@@ -80,8 +80,8 @@ function jump() {
         const timeElapsed = getTimeElapsed();
         squishing = true;
 
-        heightMultiplier = calculateDisplacement(-0.5, 1, 1, timeElapsed);
-        widthMultiplier = calculateDisplacement(0.5, 1, -1, timeElapsed);
+        heightMultiplier = calculateDisplacement(-0.5, 1, 1.5, timeElapsed);
+        widthMultiplier = calculateDisplacement(0.5, 1, -1.5, timeElapsed);
 
         refreshData();
 
@@ -128,7 +128,7 @@ cababas.addEventListener("click", jump);
 jumpButton.addEventListener("click", jump);
 
 window.addEventListener("load", () => {
-    setX(body.offsetWidth - cababas.offsetWidth);
+    setX(0);
     setY(0);
     refreshData();
 });

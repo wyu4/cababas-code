@@ -2,3 +2,4 @@ node_modules
 out
 temp.html
 .env
+.vscode-test

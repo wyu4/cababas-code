@@ -6,47 +6,58 @@ const widthLabel = document.getElementById("width-label");
 const jumpButton = document.getElementById("jump-button");
 
 const gravity = -980.0;
-const jumpVelocity = 400;
+const jumpVelocity = 500;
+const moveVelocity = 100;
+const squishSeconds = 0.1;
 
 let heightMultiplier = 1;
+let widthMultiplier = 1;
+let direction = 1;
 let cababasX = 0;
 let cababasY = 0;
+let initialX = cababasX;
 let jumping = false;
+let squishing = false;
 
 function updateSize() {
     const width = body.offsetWidth * 0.25;
     widthLabel.textContent = "Width: " + width;
     cababas.style.width = width + "px";
     cababas.style.height = width * heightMultiplier + "px";
+    cababas.style.transform = `scaleX(${-direction * widthMultiplier})`;
 }
 
-function refresh() {
+function refreshData() {
     updateSize();
     xLabel.textContent = "X: " + cababasX;
     yLabel.textContent = "Y: " + cababasY;
+    setX(cababasX);
+    setY(cababasY);
 }
 
 function calculateDisplacement(
     initialVelocity,
     initialDisplacement,
     acceleration,
-    timeElapsed
+    secondsElapsed
 ) {
     return (
-        initialVelocity * timeElapsed +
-        0.5 * acceleration * (timeElapsed * timeElapsed) +
+        initialVelocity * secondsElapsed +
+        0.5 * acceleration * (secondsElapsed * secondsElapsed) +
         initialDisplacement
     );
 }
 
 function setX(x) {
-    cababasX = x;
-    cababas.style.bottom = x + "px";
+    const clamped = Math.min(Math.max(0, x), body.offsetWidth);
+    cababasX = clamped;
+    cababas.style.left = clamped + "px";
 }
 
 function setY(y) {
-    cababasY = y;
-    cababas.style.bottom = Math.max(0, y) + "px";
+    const clamped = Math.max(0, y);
+    cababasY = clamped;
+    cababas.style.bottom = clamped + "px";
 }
 
 function jump() {
@@ -54,30 +65,87 @@ function jump() {
         return;
     }
     jumping = true;
+    direction = Math.random() < 0.5 ? 1 : -1;
+    initialX = cababasX;
 
-    console.log("Jumping...");
-    const startTime = performance.now();
+    if (squishing) {
+        return;
+    }
 
-    const update = () => {
-        const timeElapsed = (performance.now() - startTime) / 1000;
-        setY(calculateDisplacement(jumpVelocity, 0, gravity, timeElapsed));
+    let startTime = performance.now();
 
-        if (cababasY > 0) {
-            requestAnimationFrame(update);
-        } else {
-            jumping = false;
+    const getTimeElapsed = () => (performance.now() - startTime) / 1000;
+
+    const squishTick = () => {
+        const timeElapsed = getTimeElapsed();
+        squishing = true;
+
+        heightMultiplier = calculateDisplacement(-0.5, 1, 1, timeElapsed);
+        widthMultiplier = calculateDisplacement(0.5, 1, -1, timeElapsed);
+
+        refreshData();
+
+        if (heightMultiplier < 1) {
+            requestAnimationFrame(squishTick);
+            return;
+        }
+
+        heightMultiplier = 1;
+        widthMultiplier = 1;
+        squishing = false;
+
+        if (jumping) {
+            startTime = performance.now();
+            requestAnimationFrame(jumpTick);
         }
     };
 
-    requestAnimationFrame(update);
+    const jumpTick = () => {
+        const timeElapsed = getTimeElapsed();
+        cababasY = calculateDisplacement(jumpVelocity, 0, gravity, timeElapsed);
+        cababasX = calculateDisplacement(
+            moveVelocity * direction,
+            initialX,
+            0,
+            timeElapsed
+        );
+
+        refreshData();
+
+        if (cababasY > 0) {
+            requestAnimationFrame(jumpTick);
+        } else {
+            startTime = performance.now();
+            jumping = false;
+            requestAnimationFrame(squishTick);
+        }
+    };
+
+    requestAnimationFrame(squishTick);
 }
 
 cababas.addEventListener("click", jump);
 jumpButton.addEventListener("click", jump);
 
 window.addEventListener("load", () => {
-    refresh();
     setX(body.offsetWidth - cababas.offsetWidth);
     setY(0);
+    refreshData();
 });
-window.addEventListener("resize", refresh);
+window.addEventListener("resize", refreshData);
+
+////////////////////////////////////////////////////////
+
+function getRandomRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+async function jumpRandomly() {
+    while (true) {
+        await jump();
+        await new Promise((resolve) =>
+            setTimeout(resolve, getRandomRange(2000, 6000))
+        );
+    }
+}
+jumpRandomly();

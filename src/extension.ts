@@ -72,7 +72,6 @@ export function activate(context: vscode.ExtensionContext) {
 
                 #cababas {
                     position: absolute;
-                    size: absolute;
                 }
             </style>
 

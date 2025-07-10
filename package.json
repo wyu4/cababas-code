@@ -5,6 +5,7 @@
   "description": "Spawn in a cute little Cameluo Cababas coding companion!",
   "version": "0.0.1",
   "repository": "https://github.com/wyu4/cababas-code.git",
+  "icon":"./media/cababasIdle.png",
   "engines": {
     "vscode": "^1.101.0"
   },

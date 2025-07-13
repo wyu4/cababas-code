@@ -11,10 +11,6 @@ export function activate(context: vscode.ExtensionContext) {
         return vscode.Uri.joinPath(context.extensionUri, "media", name);
     };
 
-    const getScriptPath = (script: string) => {
-        return vscode.Uri.joinPath(context.extensionUri, "scripts", script);
-    };
-
     const love = vscode.commands.registerCommand("cababas-buddy.love", () => {
         const panel = vscode.window.createWebviewPanel(
             "cababas-buddy",
@@ -47,14 +43,15 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.ViewColumn.Beside,
             {
                 enableScripts: true,
+                localResourceRoots: [context.extensionUri],
             }
         );
 
-        const idleImage = panel.webview.asWebviewUri(
+        const image = panel.webview.asWebviewUri(
             getMediaPath("cababasIdle.png")
         );
 
-        const script = panel.webview.asWebviewUri(getScriptPath("cababas.js"));
+        const script = panel.webview.asWebviewUri(getMediaPath("cababas.js"));
 
         panel.webview.html = `<!DOCTYPE html>
             <html lang="en">
@@ -68,9 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
                 body {
                     overflow-y: hidden;
                     overflow-x: hidden;
+                    width: 100vw;
+                    height: 100vh;
                 }
 
-                #cababas {
+                .cababas {
                     position: absolute;
                     -webkit-user-select: none;
                     -khtml-user-select: none;
@@ -81,15 +80,8 @@ export function activate(context: vscode.ExtensionContext) {
             </style>
 
             <body>
-                <section id="info" hidden>
-                    <p id="x-label"></p>
-                    <p id="y-label"></p>
-                    <p id="width-label"></p>
-                    <button id="jump-button">Jump</button>
-                </section>
-                <img id="cababas" draggable="false" src="${idleImage}" />
+                <img src="${image}" draggable="false">
             </body>
-            <script src="${script}"></script>
 
             </html>`;
     });

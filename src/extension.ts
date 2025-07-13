@@ -68,7 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
                 body {
                     overflow-y: hidden;
                     overflow-x: hidden;
-<<<<<<< Updated upstream
                 }
 
                 #cababas {
@@ -77,41 +76,11 @@ export function activate(context: vscode.ExtensionContext) {
                     -khtml-user-select: none;
                     -moz-user-select: none;
                     -o-user-select: none;
-=======
-                    width: 100vw;
-                    height: 100vh;
-                    overflow: hidden;
-                }
-
-                body * {
-                    position: absolute;
-                }
-
-                .cababas {
->>>>>>> Stashed changes
                     user-select: none;
-                    resize: none;
-                    user-select: none;
-                }
-
-                #spawn {
-                    margin-left: 50vw;
-                    margin-top: 15vh;
-                    transform: translateX(-50%);
-                    padding: 8px 16px;
-                    border: 1px solid var(--vscode-button-border, transparent);
-                    background-color: var(--vscode-button-background);
-                    color: var(--vscode-button-foreground);
-                    border-radius: 2px;
-                    cursor: pointer;
-                    font-family: var(--vscode-font-family);
-                    font-size: var(--vscode-font-size);
-
                 }
             </style>
 
             <body>
-<<<<<<< Updated upstream
                 <section id="info" hidden>
                     <p id="x-label"></p>
                     <p id="y-label"></p>
@@ -120,13 +89,6 @@ export function activate(context: vscode.ExtensionContext) {
                 </section>
                 <img id="cababas" draggable="false" src="${idleImage}" />
             </body>
-=======
-                <button id="spawn">Spawn</button>
-            </body>
-            <script>
-                const cababasImage = "${image}";
-            </script>
->>>>>>> Stashed changes
             <script src="${script}"></script>
 
             </html>`;

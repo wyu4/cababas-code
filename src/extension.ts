@@ -67,21 +67,42 @@ export function activate(context: vscode.ExtensionContext) {
                     overflow-x: hidden;
                     width: 100vw;
                     height: 100vh;
+                    overflow: hidden;
+                }
+
+                body * {
+                    position: absolute;
                 }
 
                 .cababas {
-                    position: absolute;
-                    -webkit-user-select: none;
-                    -khtml-user-select: none;
-                    -moz-user-select: none;
-                    -o-user-select: none;
                     user-select: none;
+                    resize: none;
+                    user-select: none;
+                }
+
+                #spawn {
+                    margin-left: 50vw;
+                    margin-top: 15vh;
+                    transform: translateX(-50%);
+                    padding: 8px 16px;
+                    border: 1px solid var(--vscode-button-border, transparent);
+                    background-color: var(--vscode-button-background);
+                    color: var(--vscode-button-foreground);
+                    border-radius: 2px;
+                    cursor: pointer;
+                    font-family: var(--vscode-font-family);
+                    font-size: var(--vscode-font-size);
+
                 }
             </style>
 
             <body>
-                <img src="${image}" draggable="false">
+                <button id="spawn">Spawn</button>
             </body>
+            <script>
+                const cababasImage = "${image}";
+            </script>
+            <script src="${script}"></script>
 
             </html>`;
     });

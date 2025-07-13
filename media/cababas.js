@@ -4,7 +4,7 @@ class Cababas {
         this.cababas = document.createElement("img");
         this.cababas.className = "cababas";
         this.cababas.draggable = false;
-        this.cababas.src = "./cababasIdle.png";
+        this.cababas.src = cababasImage;
         this.body.appendChild(this.cababas);
 
         this.gravity = -980.0;
@@ -15,8 +15,9 @@ class Cababas {
         this.heightMultiplier = 1;
         this.widthMultiplier = 1;
         this.direction = 1;
-        this.cababasX = 0;
-        this.cababasY = 0;
+        this.maxX = 0;
+        this.cababasX = null;
+        this.cababasY = null;
         this.initialX = this.cababasX;
         this.jumping = false;
         this.squishing = false;
@@ -25,8 +26,7 @@ class Cababas {
     }
 
     init() {
-        this.setX(0);
-        this.setY(0);
+        this.setRandomDirection();
         this.refreshData();
         this.cababas.addEventListener("click", () => this.jump());
         window.addEventListener("resize", () => this.refreshData());
@@ -36,6 +36,10 @@ class Cababas {
 
     getRandomRange(min, max) {
         return Math.random() * (max - min) + min;
+    }
+
+    setRandomDirection() {
+        this.direction = Math.random() < 0.5 ? 1 : -1;
     }
 
     async jumpRandomly() {
@@ -48,8 +52,8 @@ class Cababas {
     }
 
     updateSize() {
-        this.cababas.style.width = 3 + "cm";
-        this.cababas.style.height = 3 * this.heightMultiplier + "cm";
+        this.cababas.style.width = 2 + "cm";
+        this.cababas.style.height = 2 * this.heightMultiplier + "cm";
         this.cababas.style.transform = `scaleX(${
             -this.direction * this.widthMultiplier
         })`;
@@ -75,15 +79,21 @@ class Cababas {
     }
 
     setX(x) {
-        const clamped = Math.min(
-            Math.max(0, x),
-            this.body.offsetWidth - this.cababas.offsetWidth
-        );
+        this.maxX = this.body.offsetWidth - this.cababas.offsetWidth;
+        if (x === null) {
+            this.setX(this.getRandomRange(0, this.maxX));
+            return;
+        }
+        const clamped = Math.min(Math.max(0, x), this.maxX);
         this.cababasX = clamped;
         this.cababas.style.left = clamped + "px";
     }
 
     setY(y) {
+        if (y === null) {
+            this.setY(0);
+            return;
+        }
         const clamped = Math.max(0, y);
         this.cababasY = clamped;
         this.cababas.style.bottom = clamped + "px";
@@ -94,8 +104,10 @@ class Cababas {
             return;
         }
         this.jumping = true;
-        this.direction = Math.random() < 0.5 ? 1 : -1;
         this.initialX = this.cababasX;
+        this.moveVelocity = this.getRandomRange(20, 110);
+        this.jumpVelocity = this.getRandomRange(500, 550);
+        this.setRandomDirection();
 
         if (this.squishing) {
             return;
@@ -168,9 +180,18 @@ class Cababas {
         requestAnimationFrame(squishTick);
     }
 }
-new Cababas();
-// let cababas = document.createElement("img");
-// cababas.className = "cababas";
-// cababas.draggable = false;
-// cababas.src = cababasImage;
-// document.body.appendChild(cababas);
+
+const spawnButton = document.getElementById("spawn");
+let spawnCount = 0;
+
+function spawnCababas() {
+    if (spawnCount >= 20) {
+        return;
+    }
+    new Cababas();
+    spawnCount++;
+}
+
+spawnCababas();
+
+spawnButton.addEventListener("click", spawnCababas);

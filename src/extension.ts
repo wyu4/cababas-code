@@ -62,12 +62,19 @@ export function activate(context: vscode.ExtensionContext) {
                 <title>Cameluo Cababas</title>
             </head>
             <style>
+                :root {
+                    margin: 0;
+                }
+
                 body {
                     overflow-y: hidden;
                     overflow-x: hidden;
                     width: 100vw;
                     height: 100vh;
                     overflow: hidden;
+                    margin: 0;
+                    padding: 0;
+                    gap: 0;
                 }
 
                 body * {

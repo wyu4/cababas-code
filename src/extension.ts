@@ -11,10 +11,6 @@ export function activate(context: vscode.ExtensionContext) {
         return vscode.Uri.joinPath(context.extensionUri, "media", name);
     };
 
-    const getScriptPath = (script: string) => {
-        return vscode.Uri.joinPath(context.extensionUri, "scripts", script);
-    };
-
     const love = vscode.commands.registerCommand("cababas-buddy.love", () => {
         const panel = vscode.window.createWebviewPanel(
             "cababas-buddy",
@@ -47,14 +43,15 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.ViewColumn.Beside,
             {
                 enableScripts: true,
+                localResourceRoots: [context.extensionUri],
             }
         );
 
-        const idleImage = panel.webview.asWebviewUri(
+        const image = panel.webview.asWebviewUri(
             getMediaPath("cababasIdle.png")
         );
 
-        const script = panel.webview.asWebviewUri(getScriptPath("cababas.js"));
+        const script = panel.webview.asWebviewUri(getMediaPath("cababas.js"));
 
         panel.webview.html = `<!DOCTYPE html>
             <html lang="en">
@@ -68,27 +65,43 @@ export function activate(context: vscode.ExtensionContext) {
                 body {
                     overflow-y: hidden;
                     overflow-x: hidden;
+                    width: 100vw;
+                    height: 100vh;
+                    overflow: hidden;
                 }
 
-                #cababas {
+                body * {
                     position: absolute;
-                    -webkit-user-select: none;
-                    -khtml-user-select: none;
-                    -moz-user-select: none;
-                    -o-user-select: none;
+                }
+
+                .cababas {
                     user-select: none;
+                    resize: none;
+                    user-select: none;
+                }
+
+                #spawn {
+                    margin-left: 50vw;
+                    margin-top: 15vh;
+                    transform: translateX(-50%);
+                    padding: 8px 16px;
+                    border: 1px solid var(--vscode-button-border, transparent);
+                    background-color: var(--vscode-button-background);
+                    color: var(--vscode-button-foreground);
+                    border-radius: 2px;
+                    cursor: pointer;
+                    font-family: var(--vscode-font-family);
+                    font-size: var(--vscode-font-size);
+
                 }
             </style>
 
             <body>
-                <section id="info" hidden>
-                    <p id="x-label"></p>
-                    <p id="y-label"></p>
-                    <p id="width-label"></p>
-                    <button id="jump-button">Jump</button>
-                </section>
-                <img id="cababas" draggable="false" src="${idleImage}" />
+                <button id="spawn">Spawn</button>
             </body>
+            <script>
+                const cababasImage = "${image}";
+            </script>
             <script src="${script}"></script>
 
             </html>`;
